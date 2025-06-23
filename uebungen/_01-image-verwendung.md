@@ -29,7 +29,7 @@ docker container ls -a
 docker container start nginx-container
 # open http://localhost:8080
 # create file in container
-docker container exec nginx-container bash-c "echo 'Hello World' >> /usr/share/nginx/html/hw.html"
+docker container exec nginx-container bash -c "echo 'Hello World' >> /usr/share/nginx/html/hw.html"
 # open http://localhost:8080/hw.html
 # stop container
 docker container stop nginx-container
