@@ -1,8 +1,11 @@
 #!/bin/bash
 
+mkdir -p pgdata
+
 docker run \
   --rm \
   -v "$(pwd)/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql" \
+  -v "$(pwd)/pgdata:/var/lib/postgresql/data" \
   -p5432:5432 \
   -e POSTGRES_DB=helloworld \
   -e POSTGRES_USER=user \
