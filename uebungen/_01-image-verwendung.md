@@ -15,7 +15,7 @@
 ```bash
 # pull latest
 docker pull nginx
-# pull version 1.27.0
+# pull version 1.27.5
 docker pull nginx:1.27.5
 # show
 docker images
