@@ -43,4 +43,4 @@ docker container stop nginx-container
 3. Was bedeuten beim Erzeugen des Containers die Parameter `-e`, `-v` und `-p`?
 4. Was passiert mit der Datei `hw.html`, wenn der Container gestoppt wird? Was passiert, wenn der Container gelöscht und neu angelegt wird?
 5. Was macht der folgende Befehl?
-   `docker run --rm -it thegeeklab/nginx bin/sh`
+   `docker run --rm -it thegeeklab/nginx /bin/sh`
