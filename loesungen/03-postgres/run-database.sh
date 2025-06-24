@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# on Windows Git Bash, use $(pwd -W)!
 docker run \
   --rm \
   -v "$(pwd)/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql" \
