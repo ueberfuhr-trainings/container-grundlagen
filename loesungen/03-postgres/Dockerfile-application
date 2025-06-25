@@ -8,3 +8,13 @@ ENV DB_HOST=host.docker.internal
 ENV DB_PORT=5432
 
 CMD ["python3", "server.py"]
+
+# Install curl
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+ && rm -rf /var/lib/apt/lists/*
+
+HEALTHCHECK \
+  --start-period=10s \
+  --interval=10s \
+  --timeout=3s \
+  CMD curl -f http://localhost:5000/hello || exit 1
