@@ -68,3 +68,11 @@ docker run \
   -p8080:5000 \
   my-database-app:1.0.0
 ```
+
+## Docker Compose
+
+To use Docker Compose to create and run both containers:
+
+```bash
+docker-compose up --build
+```

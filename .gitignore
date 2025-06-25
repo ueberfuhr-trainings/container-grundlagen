@@ -1,4 +1,5 @@
 **/.*
 !.gitignore
 !.editorconfig
+!**/.env
 *.iml
