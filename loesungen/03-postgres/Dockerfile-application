@@ -1,0 +1,10 @@
+FROM python:3-slim
+
+COPY server.py /
+RUN pip install --no-cache-dir flask psycopg2-binary
+
+ENV DB_NAME=helloworld
+ENV DB_HOST=host.docker.internal
+ENV DB_PORT=5432
+
+CMD ["python3", "server.py"]
