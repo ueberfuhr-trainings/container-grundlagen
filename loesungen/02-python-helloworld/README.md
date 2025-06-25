@@ -24,3 +24,17 @@ docker run \
   --rm \
   my-python-app:1.0.0
 ```
+
+## Native Builds
+
+For native builds, use
+
+```bash
+docker build \
+  -f Dockerfile-native \
+  -t my-python-app:1.0.0-native \
+  .
+docker run \
+  --rm \
+  my-python-app:1.0.0-native
+```

@@ -1,0 +1,33 @@
+# ---------- Build Stage ----------
+# Build stage uses same image as runtime
+FROM debian:bullseye-slim AS builder
+
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip python3-dev build-essential libffi-dev gcc \
+ && pip3 install pyinstaller
+
+WORKDIR /app
+
+# Copy your app
+COPY hello.py .
+
+# Optional: install app dependencies
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# Build native binary
+RUN pyinstaller --onefile hello.py
+
+# ---------- Final Minimal Stage ----------
+FROM debian:bullseye-slim
+
+# Add non-root user (optional)
+RUN useradd -m appuser
+
+# Copy binary from builder stage
+COPY --from=builder /app/dist/hello /usr/local/bin/hello
+
+# Run as non-root user
+USER appuser
+
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/hello"]
