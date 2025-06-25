@@ -1,4 +1,4 @@
-# NGinX sample
+# Python sample
 
 ## Local Development
 
@@ -14,7 +14,7 @@ docker run \
 
 ## Build & Deployment
 
-To Build the image and run the container:
+To build the image and run the container:
 
 ```bash
 docker build \
