@@ -22,6 +22,11 @@ minikube dashboard
 Use the following commands:
 
 ```bash
+# create a secret
+kubectl create secret generic db-secret \
+  --from-literal=username='<your-user-here>' \
+  --from-literal=password='<your-password-here>' \
+  -n schulung
 # create persistence volume
 kubectl apply -f db-volume.yaml -n schulung
 # create deployment (=deploy db service)
