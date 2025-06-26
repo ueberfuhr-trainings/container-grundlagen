@@ -8,6 +8,15 @@ Then, create a namespace (project) where all K8s resources are grouped:
 kubectl create namespace schulung
 ```
 
+## Open Dashboard
+
+Minikube has a Kubernetes Dashboard where you can find the resources in the Browser UI. Just run
+
+```bash
+minikube addons enable dashboard
+minikube dashboard
+```
+
 ## Install Database
 
 Use the following commands:
