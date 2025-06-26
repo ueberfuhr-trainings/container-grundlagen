@@ -36,6 +36,9 @@ kubectl apply -f db-service.yaml -n schulung
 kubectl get svc -n schulung
 ```
 
+> [!NOTE]
+> For details, see the [YAML Docs](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/deployment-v1/).
+
 ## Install Application
 
 Use the following commands:
