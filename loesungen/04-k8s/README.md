@@ -55,7 +55,7 @@ We can make the application public by using different solutions.
 ### Use minikube command
 
 ```bash
-minikube service myapp -n schulung
+minikube service myapp-service -n schulung
 ```
 
 ### Port forwarding
@@ -63,7 +63,7 @@ minikube service myapp -n schulung
 Simply start port forwarding on a local development machine:
 
 ```bash
-kubectl port-forward svc/myapp 8080:80 -n schulung
+kubectl port-forward svc/myapp-service 8080:80 -n schulung
 curl http://localhost:8080/hello -i
 ```
 
