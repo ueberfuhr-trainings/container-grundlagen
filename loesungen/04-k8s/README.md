@@ -22,6 +22,8 @@ minikube dashboard
 Use the following commands:
 
 ```bash
+# create persistence volume
+kubectl apply -f db-volume.yaml -n schulung
 # create deployment (=deploy db service)
 kubectl apply -f db-deployment.yaml -n schulung
 # check for pods
