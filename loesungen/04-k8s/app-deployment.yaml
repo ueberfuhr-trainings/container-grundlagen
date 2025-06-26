@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: ralfueberfuhr/my-database-app:1.0.0
+          image: ralfueberfuhr/my-database-app:1.1.0
           ports:
             - containerPort: 5000
           env:
@@ -30,3 +30,16 @@ spec:
                 secretKeyRef:
                   name: db-secret
                   key: password
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
