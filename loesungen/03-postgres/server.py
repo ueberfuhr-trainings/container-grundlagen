@@ -31,5 +31,26 @@ def get_messages():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/health")
+def liveness():
+    # Simple liveness check
+    return jsonify(status="ok"), 200
+
+@app.route("/ready")
+def readiness():
+    # Readiness check: test database connection
+    try:
+        conn = psycopg2.connect(
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT
+        )
+        conn.close()
+        return jsonify(status="ready"), 200
+    except Exception as e:
+        return jsonify(status="error", error=str(e)), 500
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
