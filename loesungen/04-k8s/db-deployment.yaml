@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: ralfueberfuhr/my-database
+          image: ralfueberfuhr/my-database:1.0.0
           ports:
             - containerPort: 5432
           env:

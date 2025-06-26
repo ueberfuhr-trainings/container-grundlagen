@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: ralfueberfuhr/my-database-app
+          image: ralfueberfuhr/my-database-app:1.0.0
           ports:
             - containerPort: 5000
           env:
