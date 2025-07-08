@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# on Windows Git Bash, use $(pwd -W)!
+# on Windows Git Bash, put MSYS_NO_PATHCONV=1 before ("MSYS_NO_PATHCONV=1 docker run ...")
 docker run \
   --rm \
   -v "$(pwd)/index.html:/usr/share/nginx/html/index.html" \
