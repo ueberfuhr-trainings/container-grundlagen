@@ -39,7 +39,7 @@ VALUES ('Hello, World!'),
 > Besonderheiten des `postgres`-Images:
 > - Umgebungsvariablen:
 >   - `POSTGRES_DB` (Name der Datenbank, z.B. `helloworld`)
->   - `POSTGRES_USER` / `POSTGRES_PASSWORD` (Username+Passwort, mit dem die DB initialisiert wird, z.B. `user` / ``password)
+>   - `POSTGRES_USER` / `POSTGRES_PASSWORD` (Username+Passwort, mit dem die DB initialisiert wird, z.B. `user` / `password`)
 > - Port: `5432`
 > - Schema-Initialisierungs-Skripte: `/docker-entrypoint-initdb.d/*.sql`
 > - Ablage der Daten in `/var/lib/postgresql/data`
