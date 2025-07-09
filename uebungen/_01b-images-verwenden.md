@@ -20,8 +20,8 @@ Erstelle einen Container für eine PostgreSQL-Datenbank mit folgenden Daten:
 -- Create the "helloworld" table
 CREATE TABLE helloworld
 (
-  id      SERIAL PRIMARY KEY,
-  message TEXT NOT NULL
+    id      SERIAL PRIMARY KEY,
+    message TEXT NOT NULL
 );
 
 -- Insert some sample "Hello, World!" messages
@@ -38,8 +38,10 @@ VALUES ('Hello, World!'),
 > [!NOTE]
 > Besonderheiten des `postgres`-Images:
 > - Umgebungsvariablen:
->   - `POSTGRES_DB` (Name der Datenbank, z.B. `helloworld`)
->   - `POSTGRES_USER` / `POSTGRES_PASSWORD` (Username+Passwort, mit dem die DB initialisiert wird, z.B. `user` / `password`)
+    >
+- `POSTGRES_DB` (Name der Datenbank, z.B. `helloworld`)
+>   - `POSTGRES_USER` / `POSTGRES_PASSWORD` (Username+Passwort, mit dem die DB initialisiert wird, z.B. `user` /
+      `password`)
 > - Port: `5432`
 > - Schema-Initialisierungs-Skripte: `/docker-entrypoint-initdb.d/*.sql`
 > - Ablage der Daten in `/var/lib/postgresql/data`
@@ -64,6 +66,7 @@ DB_PASSWORD = os.getenv("DB_PASSWORD", "postgres")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 
+
 @app.route("/hello", methods=["GET"])
 def get_messages():
     try:
@@ -84,10 +87,12 @@ def get_messages():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/health")
 def liveness():
     # Simple liveness check
     return jsonify(status="ok"), 200
+
 
 @app.route("/ready")
 def readiness():
@@ -105,8 +110,13 @@ def readiness():
     except Exception as e:
         return jsonify(status="error", error=str(e)), 500
 
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
 ```
 
 Die Anwendung soll dann unter `http://localhost:8080/hello` erreichbar sein.
+
+> [!NOTE]
+> Beim Starten der Anwendung müssen Abhängigkeiten installiert werden. Dies kann mit folgendem Befehl geschehen:
+> `pip install --no-cache-dir flask psycopg2-binary && python <my-server>.py`
