@@ -39,9 +39,11 @@ VALUES ('Hello, World!'),
 > Besonderheiten des `postgres`-Images:
 > - Umgebungsvariablen:
     >
+
 - `POSTGRES_DB` (Name der Datenbank, z.B. `helloworld`)
->   - `POSTGRES_USER` / `POSTGRES_PASSWORD` (Username+Passwort, mit dem die DB initialisiert wird, z.B. `user` /
-      `password`)
+
+> - `POSTGRES_USER` / `POSTGRES_PASSWORD` (Username+Passwort, mit dem die DB initialisiert wird, z.B. `user` /
+    `password`)
 > - Port: `5432`
 > - Schema-Initialisierungs-Skripte: `/docker-entrypoint-initdb.d/*.sql`
 > - Ablage der Daten in `/var/lib/postgresql/data`
@@ -120,3 +122,6 @@ Die Anwendung soll dann unter `http://localhost:8080/hello` erreichbar sein.
 > [!NOTE]
 > Beim Starten der Anwendung müssen Abhängigkeiten installiert werden. Dies kann mit folgendem Befehl geschehen:
 > `pip install --no-cache-dir flask psycopg2-binary && python <my-server>.py`
+
+> [!NOTE]
+> Um einen Container aus einem anderen Container aufzurufen, verwenden wir den Hostnamen `host.docker.internal`.
