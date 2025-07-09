@@ -1,0 +1,5 @@
+FROM postgres:17.5
+
+ENV POSTGRES_DB=helloworld
+
+COPY schema.sql /docker-entrypoint-initdb.d
