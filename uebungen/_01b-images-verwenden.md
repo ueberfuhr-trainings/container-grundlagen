@@ -43,7 +43,7 @@ VALUES ('Hello, World!'),
     `password`)
 > - Port: `5432`
 > - Schema-Initialisierungs-Skripte: `/docker-entrypoint-initdb.d/*.sql`
-> - Ablage der Daten in `/var/lib/postgresql/data`
+> - Ablage der Daten in `/var/lib/postgresql/data` bzw. `/var/lib/postgresql/18/docker` (Einstellung über Umgebungsvariable `PGDATA`)
 
 Verbinde Dich nach Start des Containers mit der Datenbank und prüfe die Inhalte der Datenbank.
 
