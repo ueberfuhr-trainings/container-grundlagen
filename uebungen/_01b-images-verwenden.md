@@ -47,6 +47,13 @@ VALUES ('Hello, World!'),
 
 Verbinde Dich nach Start des Containers mit der Datenbank und prüfe die Inhalte der Datenbank.
 
+> [!TIP]
+> Du kannst innerhalb des Containers das Tool `psql` nutzen:
+> ```bash
+> docker exec <container-name> \
+>   psql -U <user> -d <database> -c "SELECT * FROM helloworld"
+> ```
+
 ## Python-Webapp
 
 Erstelle einen Container mit einer Python-Anwendung, die die Daten aus der Datenbank ausliest:
