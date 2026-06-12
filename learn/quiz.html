@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Grundlagen Quiz - ATVANTAGE Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111111;
+            color: #eeeeee;
+        }
+
+        .academy-header {
+            background-color: #1e1e1e;
+            border-bottom: 3px solid #ff5401;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+
+        .quiz-card {
+            background-color: #1e1e1e;
+            border: 1px solid #333333;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn {
+            background-color: #2a2a2a;
+            border: 2px solid #333333;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: #444444;
+        }
+
+        .option-btn.correct {
+            background-color: #14532d;
+            border-color: #22c55e;
+        }
+
+        .option-btn.wrong {
+            background-color: #431407;
+            border-color: #ff5401;
+        }
+
+        .code-block {
+            background-color: #000000;
+            font-family: 'Courier New', Courier, monospace;
+            border: 1px solid #333333;
+        }
+
+        .email-hover-bridge::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: transparent;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Academy Top Bar -->
+    <nav class="academy-header sticky top-0 z-40 w-full px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="text-xl font-black tracking-tighter text-[#ff5401]">ATVANTAGE</span>
+            <span class="text-xl font-light text-neutral-500">Academy</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative group">
+                <button id="email-btn" class="p-2 text-neutral-400 hover:text-[#ff5401] transition-colors"
+                    title="E-Mail Kontakt">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </button>
+                <div
+                    class="absolute right-0 top-10 hidden group-hover:flex items-center gap-3 bg-[#2a2a2a] border border-[#333333] p-2 px-3 rounded-lg shadow-2xl z-50 email-hover-bridge">
+                    <a id="email-link-display" href="#"
+                        class="text-sm font-medium text-slate-300 hover:text-[#ff5401] transition-colors underline decoration-dotted underline-offset-4 decoration-slate-600">academy@atvantage.com</a>
+                    <button id="copy-email-sub-btn"
+                        class="bg-[#ff5401] hover:bg-[#e64a00] p-1.5 rounded transition-colors text-[#111111]"
+                        title="Kopieren">
+                        <svg id="copy-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                        <svg id="check-icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 hidden" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="w-full min-h-screen flex items-center justify-center p-4 md:p-8">
+
+        <div id="quiz-container" class="w-full max-w-2xl">
+            <!-- Header -->
+            <div class="mb-8 text-center">
+                <h1 class="text-4xl font-extrabold text-white mb-2 tracking-tight">Docker <span
+                        class="text-[#ff5401]">Grundlagen-Check</span></h1>
+                <p class="text-neutral-500">Auffrischung der Container-Basics vor dem Kubernetes-Kurs</p>
+                <div class="mt-4 flex justify-between items-center text-xs text-neutral-500 mb-1">
+                    <span id="question-counter">Frage 1 von 15</span>
+                    <span id="score-counter">Punkte: 0</span>
+                </div>
+                <div class="h-2 w-full bg-[#1e1e1e] rounded-full overflow-hidden border border-[#333333]">
+                    <div id="progress-bar" class="h-full bg-[#ff5401] transition-all duration-500" style="width: 0%">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-card" class="quiz-card p-6 rounded-2xl shadow-2xl">
+                <div id="question-content">
+                </div>
+
+                <div id="options-container" class="space-y-3 mt-6">
+                </div>
+
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border-l-4">
+                </div>
+
+                <button id="next-btn"
+                    class="mt-6 w-full py-3 bg-[#ff5401] hover:bg-[#e64a00] font-semibold rounded-xl transition-colors hidden text-white">
+                    Nächste Frage
+                </button>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="quiz-card p-8 rounded-2xl shadow-2xl text-center hidden">
+                <h2 class="text-4xl font-extrabold text-white mb-4">Training <span
+                        class="text-[#ff5401]">beendet!</span></h2>
+                <p id="final-score" class="text-xl mb-6"></p>
+                <div id="score-interpretation" class="mb-8 text-neutral-400"></div>
+                <button onclick="location.reload()"
+                    class="px-8 py-3 bg-[#ff5401] hover:bg-[#e64a00] font-semibold rounded-xl text-white transition-colors">
+                    Quiz neu starten
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function getAcademyEmail() {
+            const part1 = 'academy';
+            const part2 = 'atvantage.com';
+            return part1 + '@' + part2;
+        }
+
+        // E-Mail Anzeige initialisieren
+        const emailLink = document.getElementById('email-link-display');
+        emailLink.innerText = getAcademyEmail();
+
+        // E-Mail Logik (Header Button)
+        document.getElementById('email-btn').onclick = function () {
+            window.location.href = 'mailto:' + getAcademyEmail();
+        };
+
+        // E-Mail Logik (Popup Link)
+        emailLink.onclick = function (e) {
+            e.preventDefault();
+            window.location.href = 'mailto:' + getAcademyEmail();
+        };
+        emailLink.onmouseenter = function () {
+            this.href = 'mailto:' + getAcademyEmail();
+        };
+
+        // E-Mail Kopieren
+        document.getElementById('copy-email-sub-btn').onclick = function () {
+            const email = getAcademyEmail();
+            const temp = document.createElement('textarea');
+            temp.value = email;
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+                document.execCommand('copy');
+                const copyIcon = document.getElementById('copy-icon');
+                const checkIcon = document.getElementById('check-icon');
+                copyIcon.classList.add('hidden');
+                checkIcon.classList.remove('hidden');
+                setTimeout(() => {
+                    copyIcon.classList.remove('hidden');
+                    checkIcon.classList.add('hidden');
+                }, 2000);
+            } catch (err) {
+                console.error('Kopieren fehlgeschlagen');
+            }
+            document.body.removeChild(temp);
+        };
+
+        const questions = [
+            {
+                description: "Die 12-Factor-App-Methodik beschreibt Best Practices für moderne Cloud-Anwendungen.",
+                question: "Wie sollte eine 12-Factor-App laut Faktor III ('Config') ihre Konfiguration erhalten?",
+                options: [
+                    {
+                        text: "Über Umgebungsvariablen, die von außen gesetzt werden.",
+                        correct: true,
+                        feedback: "Richtig! Umgebungsvariablen trennen Konfiguration sauber vom Code und lassen sich pro Deployment ändern."
+                    },
+                    {
+                        text: "Über eine fest eingebettete Konfigurationsdatei im Container-Image.",
+                        correct: false,
+                        feedback: "Nein, das würde bedeuten, dass pro Umgebung (Dev, Staging, Prod) ein eigenes Image gebaut werden müsste."
+                    },
+                    {
+                        text: "Über Kommandozeilenparameter, die beim Start des Containers übergeben werden.",
+                        correct: false,
+                        feedback: "CLI-Parameter sind möglich, aber nicht der empfohlene 12-Factor-Weg. Umgebungsvariablen sind sprach- und betriebssystemunabhängig."
+                    },
+                    {
+                        text: "Über eine zentrale Datenbank, die alle Services bei jedem Request abfragen.",
+                        correct: false,
+                        feedback: "Das wäre ein Single Point of Failure und widerspricht dem 12-Factor-Prinzip."
+                    }
+                ]
+            },
+            {
+                description: "Du möchtest einen Container im Hintergrund starten und ihm einen eindeutigen Namen geben.",
+                question: "Welcher Docker-CLI-Befehl ist dafür korrekt?",
+                options: [
+                    {
+                        text: "docker run -d --name my-app nginx",
+                        correct: true,
+                        feedback: "Richtig! '-d' steht für 'detached' (Hintergrund) und '--name' vergibt einen Namen."
+                    },
+                    {
+                        text: "docker start -d --name my-app nginx",
+                        correct: false,
+                        feedback: "'docker start' startet einen existierenden, gestoppten Container — er erstellt keinen neuen."
+                    },
+                    {
+                        text: "docker create --background --name my-app nginx",
+                        correct: false,
+                        feedback: "'docker create' erstellt einen Container, startet ihn aber nicht. '--background' ist kein gültiger Flag."
+                    },
+                    {
+                        text: "docker run --daemon --label my-app nginx",
+                        correct: false,
+                        feedback: "Es gibt kein '--daemon'-Flag. Der richtige Flag ist '-d'. '--label' setzt Metadaten, keinen Namen."
+                    }
+                ]
+            },
+            {
+                description: "Dockerfiles beschreiben den Aufbau eines Container-Images Schicht für Schicht.",
+                question: "Welche Anweisung definiert den Befehl, der beim Start des Containers ausgeführt wird?",
+                options: [
+                    {
+                        text: "CMD",
+                        correct: true,
+                        feedback: "Richtig! CMD definiert den Standard-Startbefehl. Er kann beim 'docker run' überschrieben werden."
+                    },
+                    {
+                        text: "RUN",
+                        correct: false,
+                        feedback: "RUN wird zur Build-Zeit ausgeführt, nicht beim Container-Start."
+                    },
+                    {
+                        text: "COPY",
+                        correct: false,
+                        feedback: "COPY kopiert Dateien ins Image, hat aber mit dem Startbefehl nichts zu tun."
+                    },
+                    {
+                        text: "EXPOSE",
+                        correct: false,
+                        feedback: "EXPOSE dokumentiert einen Port, führt aber keinen Befehl aus."
+                    }
+                ]
+            },
+            {
+                description: "Ein Team pusht ein neues Image in eine Registry, ohne einen expliziten Tag anzugeben.",
+                question: "Welchen Tag erhält das Image automatisch — und warum ist das in der Praxis problematisch?",
+                options: [
+                    {
+                        text: "'latest' — weil dieser Tag bei jedem Push überschrieben wird und so unklar ist, welche Version tatsächlich läuft.",
+                        correct: true,
+                        feedback: "Richtig! 'latest' ist kein Versionsversprechen, sondern einfach der Default-Tag. Ohne explizite Tags verliert man die Nachvollziehbarkeit."
+                    },
+                    {
+                        text: "'v1.0' — Docker vergibt automatisch semantische Versionsnummern.",
+                        correct: false,
+                        feedback: "Nein, Docker vergibt keine automatischen Versionsnummern. Das muss manuell oder per CI/CD geschehen."
+                    },
+                    {
+                        text: "'stable' — Docker markiert automatisch stabile Builds.",
+                        correct: false,
+                        feedback: "Es gibt keinen automatisch vergebenen 'stable'-Tag."
+                    },
+                    {
+                        text: "Gar keinen Tag — das Image ist dann nicht auffindbar.",
+                        correct: false,
+                        feedback: "Falsch. Ohne expliziten Tag wird automatisch 'latest' verwendet."
+                    }
+                ]
+            },
+            {
+                description: "In einer Container-Registry wird ein Image unter einem bestimmten Pfad gespeichert.",
+                question: "Was beschreibt ein 'Repository' im Kontext einer Container-Registry?",
+                options: [
+                    {
+                        text: "Eine Sammlung von Image-Versionen unter einem gemeinsamen Namen, z.B. 'mycompany/backend'.",
+                        correct: true,
+                        feedback: "Richtig! Ein Repository gruppiert alle Tags (Versionen) eines Images unter einem logischen Namen."
+                    },
+                    {
+                        text: "Ein einzelner laufender Container auf einem Server.",
+                        correct: false,
+                        feedback: "Nein, ein Container ist eine laufende Instanz. Das Repository liegt in der Registry."
+                    },
+                    {
+                        text: "Ein Git-Repository mit dem Quellcode der Anwendung.",
+                        correct: false,
+                        feedback: "Nicht im Registry-Kontext. Hier geht es um Image-Repositories, nicht um Source-Code."
+                    },
+                    {
+                        text: "Ein Backup aller Docker-Volumes.",
+                        correct: false,
+                        feedback: "Volumes haben nichts mit der Registry zu tun."
+                    }
+                ]
+            },
+            {
+                description: "Eine Datenbank im Container speichert ihre Daten standardmäßig innerhalb des Container-Dateisystems.",
+                question: "Was passiert mit den Daten, wenn der Container gelöscht wird — und wie verhindert man den Datenverlust?",
+                options: [
+                    {
+                        text: "Die Daten gehen verloren. Man verwendet Docker Volumes, um Daten außerhalb des Containers persistent zu speichern.",
+                        correct: true,
+                        feedback: "Richtig! Volumes überleben den Lebenszyklus eines Containers und sind der empfohlene Weg für persistente Daten."
+                    },
+                    {
+                        text: "Docker erstellt automatisch ein Backup, bevor der Container gelöscht wird.",
+                        correct: false,
+                        feedback: "Nein, Docker sichert nichts automatisch. Ohne Volume sind die Daten weg."
+                    },
+                    {
+                        text: "Die Daten bleiben im Image erhalten und sind beim nächsten Start wieder da.",
+                        correct: false,
+                        feedback: "Falsch. Änderungen zur Laufzeit werden nicht ins Image zurückgeschrieben."
+                    },
+                    {
+                        text: "Man muss die Datenbank vor dem Löschen manuell exportieren — es gibt keine andere Lösung.",
+                        correct: false,
+                        feedback: "Manuelle Exports sind umständlich. Volumes sind die elegante, eingebaute Lösung."
+                    }
+                ]
+            },
+            {
+                description: "Zwei Container — ein Backend und eine Datenbank — müssen miteinander kommunizieren.",
+                question: "Wie finden sich Container in einem benutzerdefinierten Docker-Netzwerk gegenseitig?",
+                options: [
+                    {
+                        text: "Über ihren Containernamen als Hostname — Docker stellt dafür einen eingebauten DNS-Dienst bereit.",
+                        correct: true,
+                        feedback: "Richtig! In einem benutzerdefinierten Netzwerk löst Docker Containernamen automatisch zu IP-Adressen auf."
+                    },
+                    {
+                        text: "Über die IP-Adresse des Host-Rechners und gemappte Ports.",
+                        correct: false,
+                        feedback: "Das funktioniert zwar, ist aber fragil und nicht der empfohlene Weg für Container-zu-Container-Kommunikation."
+                    },
+                    {
+                        text: "Gar nicht — jeder Container ist komplett isoliert und kann nicht mit anderen kommunizieren.",
+                        correct: false,
+                        feedback: "Container in einem gemeinsamen Netzwerk können sehr wohl kommunizieren."
+                    },
+                    {
+                        text: "Über eine Shared-Memory-Verbindung zwischen den Containern.",
+                        correct: false,
+                        feedback: "Docker nutzt Netzwerkprotokolle, nicht Shared Memory, für Container-Kommunikation."
+                    }
+                ]
+            },
+            {
+                description: "Ein Projekt besteht aus einem Frontend, einem Backend und einer Datenbank.",
+                question: "Welches Werkzeug eignet sich am besten, um alle drei Services mit einem einzigen Befehl zu starten und zu verknüpfen?",
+                options: [
+                    {
+                        text: "Docker Compose — über eine docker-compose.yml werden alle Services, Netzwerke und Volumes deklarativ definiert.",
+                        correct: true,
+                        feedback: "Richtig! Docker Compose orchestriert Multi-Container-Setups lokal mit einem einfachen 'docker compose up'."
+                    },
+                    {
+                        text: "Ein Bash-Skript mit drei separaten 'docker run'-Befehlen.",
+                        correct: false,
+                        feedback: "Das funktioniert, ist aber fehleranfällig und schwer wartbar. Docker Compose ist der Standard dafür."
+                    },
+                    {
+                        text: "Alle drei Anwendungen in ein einziges Docker-Image packen.",
+                        correct: false,
+                        feedback: "Das widerspricht dem Prinzip 'Ein Prozess pro Container' und erschwert Skalierung und Updates."
+                    },
+                    {
+                        text: "Kubernetes — auch für lokale Entwicklung ist ein Cluster der richtige Ansatz.",
+                        correct: false,
+                        feedback: "Kubernetes ist für Produktion und größere Setups gedacht. Für lokale Entwicklung ist Docker Compose deutlich einfacher."
+                    }
+                ]
+            },
+            {
+                description: "In einer docker-compose.yml steht ein Service mit einer 'depends_on'-Angabe.",
+                question: "Was garantiert 'depends_on' — und was nicht?",
+                options: [
+                    {
+                        text: "Es garantiert die Startreihenfolge der Container, aber NICHT, dass der abhängige Service tatsächlich bereit ist.",
+                        correct: true,
+                        feedback: "Richtig! Der Datenbank-Container kann gestartet sein, aber die DB akzeptiert vielleicht noch keine Verbindungen. Dafür braucht man Health Checks."
+                    },
+                    {
+                        text: "Es garantiert, dass der abhängige Service vollständig hochgefahren und bereit ist.",
+                        correct: false,
+                        feedback: "Nein, 'depends_on' allein wartet nur auf den Container-Start, nicht auf die Anwendungsbereitschaft."
+                    },
+                    {
+                        text: "Es erstellt automatisch ein gemeinsames Netzwerk zwischen den Services.",
+                        correct: false,
+                        feedback: "Das Netzwerk wird von Compose ohnehin automatisch erstellt, unabhängig von 'depends_on'."
+                    },
+                    {
+                        text: "Es sorgt dafür, dass beide Services im selben Container laufen.",
+                        correct: false,
+                        feedback: "Nein, jeder Service in Compose läuft in seinem eigenen Container."
+                    }
+                ]
+            },
+            {
+                description: "Docker bietet eine HEALTHCHECK-Anweisung im Dockerfile an.",
+                question: "Was bewirkt ein HEALTHCHECK und wofür wird er verwendet?",
+                options: [
+                    {
+                        text: "Er führt periodisch einen Befehl aus und markiert den Container als 'healthy' oder 'unhealthy' — z.B. für Abhängigkeitssteuerung in Compose.",
+                        correct: true,
+                        feedback: "Richtig! Mit 'depends_on' und 'condition: service_healthy' kann Compose auf echte Bereitschaft warten."
+                    },
+                    {
+                        text: "Er startet den Container automatisch neu, wenn die Anwendung abstürzt.",
+                        correct: false,
+                        feedback: "Neustarts macht die Restart-Policy, nicht der Health Check. Der HEALTHCHECK meldet nur den Status."
+                    },
+                    {
+                        text: "Er prüft bei 'docker build', ob das Image fehlerfrei gebaut wurde.",
+                        correct: false,
+                        feedback: "Der HEALTHCHECK läuft zur Laufzeit, nicht zur Build-Zeit."
+                    },
+                    {
+                        text: "Er überwacht die CPU- und RAM-Auslastung des Containers.",
+                        correct: false,
+                        feedback: "Nein, ein HEALTHCHECK führt einen frei definierbaren Befehl aus (z.B. curl oder pg_isready), aber überwacht nicht die Systemressourcen."
+                    }
+                ]
+            },
+            {
+                description: "In Docker gibt es zwei zentrale Begriffe: Images und Container.",
+                question: "Was ist der Unterschied zwischen einem Docker-Image und einem Docker-Container?",
+                options: [
+                    {
+                        text: "Ein Image ist eine unveränderliche Vorlage (wie eine Klasse). Ein Container ist eine laufende Instanz davon (wie ein Objekt).",
+                        correct: true,
+                        feedback: "Richtig! Aus einem Image können beliebig viele Container gestartet werden."
+                    },
+                    {
+                        text: "Ein Container ist die Vorlage, aus der Images erzeugt werden.",
+                        correct: false,
+                        feedback: "Genau andersherum: Das Image ist die Vorlage, der Container die Instanz."
+                    },
+                    {
+                        text: "Es gibt keinen Unterschied — die Begriffe sind austauschbar.",
+                        correct: false,
+                        feedback: "Nein, es sind zwei klar unterschiedliche Konzepte."
+                    },
+                    {
+                        text: "Ein Image existiert nur in der Cloud, ein Container nur lokal.",
+                        correct: false,
+                        feedback: "Beides kann sowohl lokal als auch remote existieren."
+                    }
+                ]
+            },
+            {
+                description: "Ein Container wurde mit 'docker run' gestartet und die Anwendung darin beendet sich.",
+                question: "Welchen Status hat der Container danach — und was bedeutet das?",
+                options: [
+                    {
+                        text: "'Exited' — der Container existiert noch, läuft aber nicht mehr. Er kann mit 'docker start' neu gestartet oder mit 'docker rm' entfernt werden.",
+                        correct: true,
+                        feedback: "Richtig! Gestoppte Container belegen weiterhin Speicherplatz und können mit 'docker ps -a' angezeigt werden."
+                    },
+                    {
+                        text: "Der Container wird automatisch gelöscht und ist verschwunden.",
+                        correct: false,
+                        feedback: "Nur mit dem Flag '--rm' wird ein Container nach dem Stoppen automatisch entfernt."
+                    },
+                    {
+                        text: "'Paused' — der Container wartet auf neue Eingaben.",
+                        correct: false,
+                        feedback: "'Paused' ist ein eigener Status, der durch 'docker pause' ausgelöst wird."
+                    },
+                    {
+                        text: "Der Container startet sich automatisch neu.",
+                        correct: false,
+                        feedback: "Nur mit einer passenden Restart-Policy (z.B. '--restart always') würde er neu starten."
+                    }
+                ]
+            },
+            {
+                description: "Ein Architekt überlegt, ob Anwendung und Datenbank in denselben Container gehören.",
+                question: "Warum sollte man Anwendung und Datenbank in getrennte Container aufteilen?",
+                options: [
+                    {
+                        text: "Weil man sie unabhängig skalieren, updaten und neustarten kann — und das dem 'Ein Prozess pro Container'-Prinzip entspricht.",
+                        correct: true,
+                        feedback: "Richtig! Getrennte Container ermöglichen unabhängige Lebenszyklen, bessere Wartbarkeit und gezielte Skalierung."
+                    },
+                    {
+                        text: "Weil Docker technisch nur einen einzigen Prozess pro Container erlaubt.",
+                        correct: false,
+                        feedback: "Technisch kann ein Container mehrere Prozesse haben. Es ist aber eine Best Practice, es nicht zu tun."
+                    },
+                    {
+                        text: "Weil Container nicht genug Speicher für zwei Anwendungen haben.",
+                        correct: false,
+                        feedback: "Das ist keine technische Einschränkung. Container können beliebig viel Speicher nutzen."
+                    },
+                    {
+                        text: "Es gibt keinen Grund zur Trennung — alles in einen Container ist einfacher.",
+                        correct: false,
+                        feedback: "Kurzfristig vielleicht, aber langfristig entstehen Probleme bei Updates, Skalierung und Fehlersuche."
+                    }
+                ]
+            },
+            {
+                description: "Ein Entwickler startet einen Container mit 'docker run --rm ...', nimmt zur Laufzeit Änderungen am Dateisystem vor und stoppt den Container. Beim erneuten Starten sind alle Änderungen verschwunden.",
+                question: "Welches Prinzip der Container-Welt erklärt dieses Verhalten?",
+                options: [
+                    {
+                        text: "Container sind zustandslos (stateless) konzipiert — Daten im Container-Dateisystem sind flüchtig und gehen beim Neuerstellen verloren.",
+                        correct: true,
+                        feedback: "Richtig! Zustandslosigkeit ist ein Kernprinzip. Persistenter Zustand gehört in Volumes, Datenbanken oder externe Speicher."
+                    },
+                    {
+                        text: "Der Container hatte nicht genug Festplattenplatz.",
+                        correct: false,
+                        feedback: "Das hat nichts mit Speicherplatz zu tun, sondern mit dem flüchtigen Container-Dateisystem."
+                    },
+                    {
+                        text: "Docker löscht nach jedem Neustart automatisch alle Dateien zur Sicherheit.",
+                        correct: false,
+                        feedback: "Docker löscht nichts aktiv. Aber wenn ein Container neu erstellt wird (nicht nur neugestartet), startet er vom Image-Zustand."
+                    },
+                    {
+                        text: "Die Festplatte des Host-Systems war voll.",
+                        correct: false,
+                        feedback: "Das ist ein anderes Problem und nicht der Grund für das beschriebene Verhalten."
+                    }
+                ]
+            },
+            {
+                description: "Ein Dockerfile nutzt Multi-Stage Builds: Es gibt eine Build-Stage und eine finale Stage.",
+                code: "FROM maven:3.9 AS build\nCOPY . /app\nRUN mvn -f /app/pom.xml package\n\nFROM eclipse-temurin:21-jre\nCOPY --from=build /app/target/*.jar /app.jar\nCMD [\"java\", \"-jar\", \"/app.jar\"]",
+                question: "Welchen Vorteil hat dieser Ansatz?",
+                options: [
+                    {
+                        text: "Das finale Image enthält nur die JRE und die JAR-Datei — ohne Maven, Quellcode oder Build-Artefakte. Das macht es deutlich kleiner und sicherer.",
+                        correct: true,
+                        feedback: "Richtig! Multi-Stage Builds trennen Build-Umgebung von Laufzeit-Umgebung. Das reduziert die Angriffsfläche und die Image-Größe."
+                    },
+                    {
+                        text: "Der Build wird dadurch schneller, weil Docker beide Stages parallel ausführt.",
+                        correct: false,
+                        feedback: "Die Stages werden sequenziell ausgeführt. Der Vorteil liegt in der Größe und Sicherheit des finalen Images."
+                    },
+                    {
+                        text: "Man braucht kein Java mehr auf dem Zielsystem installiert.",
+                        correct: false,
+                        feedback: "Das gilt für Docker generell (die JRE ist im Image). Das ist kein spezifischer Vorteil von Multi-Stage Builds."
+                    },
+                    {
+                        text: "Es ermöglicht, mehrere Anwendungen in einem Container zu betreiben.",
+                        correct: false,
+                        feedback: "Nein, Multi-Stage Builds haben nichts mit der Anzahl der Prozesse im Container zu tun."
+                    }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        const questionContent = document.getElementById('question-content');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const questionCounter = document.getElementById('question-counter');
+        const scoreCounter = document.getElementById('score-counter');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            shuffleArray(q.options);
+            feedbackEl.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+            questionCounter.innerText = `Frage ${currentQuestion + 1} von ${questions.length}`;
+            scoreCounter.innerText = `Punkte: ${score}`;
+
+            let html = `
+                <p class="text-neutral-400 mb-4 italic">"${q.description}"</p>
+                <div class="bg-[#111111] p-4 rounded-xl border-l-4 border-[#ff5401] mb-6">
+                    <p class="text-lg font-medium text-white">${q.question}</p>
+                </div>
+            `;
+
+            if (q.code) {
+                html += `<pre class="code-block p-4 rounded-lg text-sm text-green-400 mb-6 overflow-x-auto shadow-inner">${q.code}</pre>`;
+            }
+
+            questionContent.innerHTML = html;
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn w-full p-4 rounded-xl text-neutral-200 shadow-sm hover:translate-x-1';
+                btn.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="flex-none w-6 h-6 rounded-full bg-[#333333] flex items-center justify-center text-xs font-bold">${String.fromCharCode(65 + index)}</span>
+                        <span>${opt.text}</span>
+                    </div>
+                `;
+                btn.onclick = () => handleAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(index) {
+            const q = questions[currentQuestion];
+            const isCorrect = q.options[index].correct;
+            const buttons = optionsContainer.querySelectorAll('.option-btn');
+
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('hover:translate-x-1');
+            });
+
+            if (isCorrect) {
+                buttons[index].classList.add('correct');
+                score++;
+            } else {
+                buttons[index].classList.add('wrong');
+                const correctIdx = q.options.findIndex(o => o.correct);
+                buttons[correctIdx].classList.add('correct');
+            }
+
+            feedbackEl.innerText = q.options[index].feedback;
+            feedbackEl.className = `mt-6 p-4 rounded-xl border-l-4 ${isCorrect ? 'bg-emerald-900/20 border-emerald-500 text-emerald-300' : 'bg-[#431407]/50 border-[#ff5401] text-orange-300'}`;
+            feedbackEl.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+            scoreCounter.innerText = `Punkte: ${score}`;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        };
+
+        function showResult() {
+            document.getElementById('question-card').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const percentage = (score / questions.length) * 100;
+            let interpretation = "";
+
+            if (percentage === 100) interpretation = "Herausragend! Du bist bestens vorbereitet für Kubernetes.";
+            else if (percentage >= 80) interpretation = "Sehr gut! Die Docker-Grundlagen sitzen. Auf zu Kubernetes!";
+            else if (percentage >= 50) interpretation = "Gute Basis! Schau dir die Erklärungen zu den falschen Antworten nochmal an.";
+            else interpretation = "Ein guter Start! Frische die Docker-Grundlagen nochmal auf, bevor es mit Kubernetes weitergeht.";
+
+            document.getElementById('final-score').innerText = `${score} von ${questions.length} Punkten (${Math.round(percentage)}%)`;
+            document.getElementById('score-interpretation').innerText = interpretation;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+
+</html>
